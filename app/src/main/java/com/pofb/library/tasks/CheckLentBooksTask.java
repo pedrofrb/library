@@ -6,6 +6,11 @@ import android.util.Log;
 import com.pofb.library.model.Book;
 import com.pofb.library.model.User;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +48,36 @@ public class CheckLentBooksTask extends AsyncTask<HttpContext,Void, ArrayList<Bo
         try {
             HttpResponse response = client.execute(request, localContext);
             HttpEntity entity = response.getEntity();
-            Log.d("caca",EntityUtils.toString(entity));
-            //todo Criar mecanismo de extração dos livros
+            String veryLongString= EntityUtils.toString(entity);
+
+//            int maxLogSize = 1000;
+//            for(int i = 0; i <= veryLongString.length() / maxLogSize; i++) {
+//                int start = i * maxLogSize;
+//                int end = (i+1) * maxLogSize;
+//                end = end > veryLongString.length() ? veryLongString.length() : end;
+//                Log.v("bitch", veryLongString.substring(start, end));
+//            }
+
+            Document doc = Jsoup.parse(veryLongString);
+            Element body = doc.body();
+            Elements divs = body.getElementsByClass("div-textoLista");
+            ArrayList<Book> books = new ArrayList<>();
+            for(Element e: divs){
+                Book b = new Book();
+                //Pega o conteudo do primeiro h3
+                b.setTitle(e.select("h3").first().text());
+
+                //Pega o conteudo do primeiro p, passa por uma regex para pegar somente numeros e converte para int
+                b.setId(Integer.parseInt(e.select("p").first().text().replaceAll("\\D+","")));
+
+                b.setOriginLibrary(e.select("a").first().text());
+
+                b.setCirculationCode(e.getElementsByClass("botaoFechar").first().attr("href").replaceAll("\\D+",""));
+
+                Log.d("amem",b.toString());
+            }
+
+            //todo Recuperar data circulação e criar mecanismo se não houver livros
 
 //            if(EntityUtils.toString(entityPost).contains("Seja bem-vindo")){
 //                Log.i("loginTask", "Successful Login on Biblioteca!");

@@ -17,6 +17,9 @@ public class Book {
         this.circulationCode = circulationCode;
     }
 
+    public Book() {
+    }
+
     public int getId() {
         return id;
     }
@@ -55,5 +58,10 @@ public class Book {
 
     public void setCirculationCode(String circulationCode) {
         this.circulationCode = circulationCode;
+    }
+
+    @Override
+    public String toString() {
+        return "name:"+title+" id: "+id+" origin: "+originLibrary+" circulation: "+circulationCode;
     }
 }
