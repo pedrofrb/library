@@ -98,7 +98,7 @@ public class CheckLentBooksTask extends AsyncTask<HttpContext, Void, ArrayList<B
                 Log.d("amem", b.toString());
             }
 
-            //todo Recuperar data circulação e criar mecanismo se não houver livros
+            //todo criar mecanismo se não houver livros
 
 //            if(EntityUtils.toString(entityPost).contains("Seja bem-vindo")){
 //                Log.i("loginTask", "Successful Login on Biblioteca!");
