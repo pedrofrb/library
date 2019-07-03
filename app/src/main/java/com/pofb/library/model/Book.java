@@ -1,5 +1,6 @@
 package com.pofb.library.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Book {
@@ -62,6 +63,7 @@ public class Book {
 
     @Override
     public String toString() {
-        return "name:"+title+" id: "+id+" origin: "+originLibrary+" circulation: "+circulationCode;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return "name:"+title+" id: "+id+" origin: "+originLibrary+" circulation: "+circulationCode+" devolution: "+sdf.format(devolution);
     }
 }

@@ -12,8 +12,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.HttpResponse;
@@ -31,7 +36,7 @@ import cz.msebera.android.httpclient.protocol.BasicHttpContext;
 import cz.msebera.android.httpclient.protocol.HttpContext;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
-public class CheckLentBooksTask extends AsyncTask<HttpContext,Void, ArrayList<Book>> {
+public class CheckLentBooksTask extends AsyncTask<HttpContext, Void, ArrayList<Book>> {
     @Override
     protected ArrayList<Book> doInBackground(HttpContext... context) {
 
@@ -48,7 +53,7 @@ public class CheckLentBooksTask extends AsyncTask<HttpContext,Void, ArrayList<Bo
         try {
             HttpResponse response = client.execute(request, localContext);
             HttpEntity entity = response.getEntity();
-            String veryLongString= EntityUtils.toString(entity);
+            String veryLongString = EntityUtils.toString(entity);
 
 //            int maxLogSize = 1000;
 //            for(int i = 0; i <= veryLongString.length() / maxLogSize; i++) {
@@ -62,19 +67,35 @@ public class CheckLentBooksTask extends AsyncTask<HttpContext,Void, ArrayList<Bo
             Element body = doc.body();
             Elements divs = body.getElementsByClass("div-textoLista");
             ArrayList<Book> books = new ArrayList<>();
-            for(Element e: divs){
+            for (Element e : divs) {
                 Book b = new Book();
                 //Pega o conteudo do primeiro h3
                 b.setTitle(e.select("h3").first().text());
 
                 //Pega o conteudo do primeiro p, passa por uma regex para pegar somente numeros e converte para int
-                b.setId(Integer.parseInt(e.select("p").first().text().replaceAll("\\D+","")));
+                b.setId(Integer.parseInt(e.select("p").first().text().replaceAll("\\D+", "")));
 
                 b.setOriginLibrary(e.select("a").first().text());
 
-                b.setCirculationCode(e.getElementsByClass("botaoFechar").first().attr("href").replaceAll("\\D+",""));
+                b.setCirculationCode(e.getElementsByClass("botaoFechar").first().attr("href").replaceAll("\\D+", ""));
 
-                Log.d("amem",b.toString());
+                String regex = "(\\d{2}/\\d{2}/\\d{2})";
+                Matcher m = Pattern.compile(regex).matcher(e.selectFirst("p[id]").text());
+                if (m.find()) {
+                    try {
+                        Date date = new SimpleDateFormat("dd/MM/yy").parse(m.group(1));
+
+                        b.setDevolution(date);
+                    }catch (ParseException er){
+                        er.printStackTrace();
+                    }
+
+                    // Use date here
+                } else {
+                    // Bad input
+                }
+
+                Log.d("amem", b.toString());
             }
 
             //todo Recuperar data circulação e criar mecanismo se não houver livros
@@ -85,7 +106,7 @@ public class CheckLentBooksTask extends AsyncTask<HttpContext,Void, ArrayList<Bo
 //                Log.e("loginTask", "Login Biblioteca Failed");
 //                throw new IOException("Could not be logged into Biblioteca");
 //            }
-        }catch(IOException e){
+        } catch (IOException e) {
             //todo Melhorar esse catch
             e.printStackTrace();
         }
