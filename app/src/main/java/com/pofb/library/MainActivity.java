@@ -1,7 +1,9 @@
 package com.pofb.library;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -49,7 +51,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         HttpContext localContext = null;
-        User user = new User("1610631GSIS", "peedro21");
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        User user = new User(sharedPreferences.getString("username", ""), sharedPreferences.getString("password", ""));
         LoginTask login = new LoginTask();
         try {
             localContext = login.execute(user).get();
