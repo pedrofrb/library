@@ -46,7 +46,7 @@ public class CheckLentBooksTask extends AsyncTask<HttpContext, Void, ArrayList<B
         String url = "http://biblioteca.cefet-rj.br/mobile/renovacoes.php?idioma=ptbr&acesso=web";
 
         HttpClient client = HttpClientBuilder.create().build();
-
+        ArrayList<Book> books = new ArrayList<>();
 
         HttpGet request = new HttpGet(url);
 
@@ -66,7 +66,7 @@ public class CheckLentBooksTask extends AsyncTask<HttpContext, Void, ArrayList<B
             Document doc = Jsoup.parse(veryLongString);
             Element body = doc.body();
             Elements divs = body.getElementsByClass("div-textoLista");
-            ArrayList<Book> books = new ArrayList<>();
+
             for (Element e : divs) {
                 Book b = new Book();
                 //Pega o conteudo do primeiro h3
@@ -95,6 +95,7 @@ public class CheckLentBooksTask extends AsyncTask<HttpContext, Void, ArrayList<B
                     // Bad input
                 }
 
+                books.add(b);
                 Log.d("amem", b.toString());
             }
 
@@ -110,7 +111,7 @@ public class CheckLentBooksTask extends AsyncTask<HttpContext, Void, ArrayList<B
             //todo Melhorar esse catch
             e.printStackTrace();
         }
-        return null;
+        return books;
     }
 
     @Override

@@ -15,4 +15,6 @@
     <string name="menu_send">Send</string>
     <string name="settings_username">Número de matrícula</string>
     <string name="settings_password">Senha</string>
+    <string name="picture_book_description">A picture of a blue book</string>
+    <string name="name_of_book">Name of Book</string>
 </resources>
