@@ -1,9 +1,10 @@
 package com.pofb.library.model;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Book {
+public class Book implements Serializable {
     private int id;
     private String title;
     private String originLibrary;

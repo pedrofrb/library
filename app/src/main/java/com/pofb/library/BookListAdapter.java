@@ -28,6 +28,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookItemViewHolder> {
     public void onBindViewHolder(@NonNull BookItemViewHolder bookItemViewHolder, int position) {
         Book book = books.get(position);
         bookItemViewHolder.title.setText(book.getTitle());
+        bookItemViewHolder.itemView.setTag(book);
 
     }
 
