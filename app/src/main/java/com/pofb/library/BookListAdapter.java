@@ -1,20 +1,27 @@
 package com.pofb.library;
 
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.pofb.library.model.Book;
 
 import java.util.List;
 
-public class BookListAdapter extends RecyclerView.Adapter<BookItemViewHolder> {
+public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookItemViewHolder> {
 
     private List<Book> books;
+    private ItemClickListener clickListener;
 
-    public BookListAdapter(List<Book> books) {
+    public BookListAdapter(List<Book> books, BookListAdapter.ItemClickListener itemClickListener) {
         this.books = books;
+        this.clickListener = itemClickListener;
     }
 
     @NonNull
@@ -24,6 +31,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookItemViewHolder> {
         return viewHolder;
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull BookItemViewHolder bookItemViewHolder, int position) {
         Book book = books.get(position);
@@ -32,8 +40,30 @@ public class BookListAdapter extends RecyclerView.Adapter<BookItemViewHolder> {
 
     }
 
+
     @Override
     public int getItemCount() {
-        return books.size();
+        return books == null ? 0 : books.size();
+    }
+
+    public class BookItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        final TextView title;
+
+        public BookItemViewHolder(@NonNull View itemView) {
+            super(itemView);
+            title = (TextView) itemView.findViewById(R.id.book_title);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (clickListener != null) clickListener.onClick(v, books.get(getAdapterPosition()));
+        }
+
+    }
+
+    public interface ItemClickListener {
+        void onClick(View view, Book b);
     }
 }

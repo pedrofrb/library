@@ -1,5 +1,6 @@
 package com.pofb.library;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -29,6 +30,7 @@ public class MainFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter bookListAdapter;
     private RecyclerView.LayoutManager layoutManager;
+
 
 
     public MainFragment() {
@@ -68,7 +70,7 @@ public class MainFragment extends Fragment {
         check.execute(localContext);
 
         try {
-            bookListAdapter = new BookListAdapter(check.get());
+            bookListAdapter = new BookListAdapter(check.get(), (BookListAdapter.ItemClickListener) getActivity());
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
@@ -77,4 +79,6 @@ public class MainFragment extends Fragment {
         recyclerView.setAdapter(bookListAdapter);
 
     }
+
+
 }

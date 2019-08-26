@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.pofb.library.model.Book;
 import com.pofb.library.model.User;
 import com.pofb.library.tasks.CheckLentBooksTask;
 import com.pofb.library.tasks.LoginTask;
@@ -30,8 +31,8 @@ import java.util.concurrent.ExecutionException;
 import cz.msebera.android.httpclient.protocol.HttpContext;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BookListAdapter.ItemClickListener {
+    FragmentTransaction transaction;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +40,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
 
 
+
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ;
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -57,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction = getSupportFragmentManager().beginTransaction();
         MainFragment mainFragment = new MainFragment();
         transaction.replace(R.id.main_fragment_container, mainFragment);
         transaction.commit();
@@ -122,6 +125,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    //TODO Ver o que irá ser feito com esse código
+    public void onBookClick(Book b) {
+
+
+    }
+
+    @Override
+    public void onClick(View view, Book b) {
+
+        transaction = getSupportFragmentManager().beginTransaction();
+        BookDetailsFragment bookDetailsFragment = BookDetailsFragment.newInstance(b);
+        transaction.replace(R.id.main_fragment_container, bookDetailsFragment).addToBackStack(null);
+
+        transaction.commit();
     }
 
 //    private class DownloadTask extends AsyncTask<String, Void, String> {
