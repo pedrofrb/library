@@ -3,9 +3,11 @@ package com.pofb.library.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.pofb.library.exceptions.GetLibraryInformationException;
 import com.pofb.library.model.User;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,11 +58,11 @@ public class LoginTask extends AsyncTask<User, Void, HttpContext> {
                 Log.i("loginTask", "Successful Login on Biblioteca!");
             } else {
                 Log.e("loginTask", "Login Biblioteca Failed");
-                throw new IOException("Could not be logged into Biblioteca");
+                throw new GetLibraryInformationException("Could not be logged into Biblioteca");
             }
         } catch (IOException e) {
-            //todo Melhorar esse catch
             e.printStackTrace();
+            localContext = null;
         } finally {
 
             if (httppost != null) {

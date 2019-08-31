@@ -28,6 +28,7 @@ import com.pofb.library.tasks.LoginTask;
 
 import java.util.concurrent.ExecutionException;
 
+import cz.msebera.android.httpclient.protocol.BasicHttpContext;
 import cz.msebera.android.httpclient.protocol.HttpContext;
 
 

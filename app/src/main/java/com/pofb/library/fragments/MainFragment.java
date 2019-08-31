@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.pofb.library.adapters.BookListAdapter;
 import com.pofb.library.R;
@@ -48,6 +49,7 @@ public class MainFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.books_recycle_view);
+        TextView emptyView = (TextView) getActivity().findViewById(R.id.empty_view);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -64,6 +66,16 @@ public class MainFragment extends Fragment {
 
 
         recyclerView.setAdapter(bookListAdapter);
+
+
+        if (recyclerView.getAdapter().getItemCount() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+
 
     }
 

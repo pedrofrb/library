@@ -21,6 +21,7 @@ import com.pofb.library.model.RenewAnswer;
 import com.pofb.library.model.User;
 import com.pofb.library.tasks.LoginTask;
 import com.pofb.library.tasks.RenewBooksTask;
+import com.pofb.library.util.DateUtil;
 
 import java.util.concurrent.ExecutionException;
 
@@ -77,7 +78,7 @@ public class BookDetailsFragment extends Fragment {
         TextView circulationDate = (TextView) getActivity().findViewById(R.id.circulation_date_book_details);
         bookName.setText(book.getTitle());
         libraryName.setText(book.getOriginLibrary());
-        circulationDate.setText(book.getCirculationCode());
+        circulationDate.setText(DateUtil.convertToString(book.getDevolution()));
         Button button = (Button) view.findViewById(R.id.confirm_renovation_books_details);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

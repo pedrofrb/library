@@ -19,7 +19,12 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookIt
 
     public BookListAdapter(List<Book> books, BookListAdapter.ItemClickListener itemClickListener) {
         this.books = books;
+
         this.clickListener = itemClickListener;
+    }
+
+    public List<Book> getBooks() {
+        return books;
     }
 
     @NonNull

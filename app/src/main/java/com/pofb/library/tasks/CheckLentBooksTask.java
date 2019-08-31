@@ -1,10 +1,12 @@
 package com.pofb.library.tasks;
 
 import android.os.AsyncTask;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.pofb.library.model.Book;
 import com.pofb.library.model.User;
+import com.pofb.library.util.DateUtil;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -55,23 +57,20 @@ public class CheckLentBooksTask extends AsyncTask<HttpContext, Void, ArrayList<B
             HttpEntity entity = response.getEntity();
             String veryLongString = EntityUtils.toString(entity);
 
-//            int maxLogSize = 1000;
-//            for(int i = 0; i <= veryLongString.length() / maxLogSize; i++) {
-//                int start = i * maxLogSize;
-//                int end = (i+1) * maxLogSize;
-//                end = end > veryLongString.length() ? veryLongString.length() : end;
-//                Log.v("bitch", veryLongString.substring(start, end));
-//            }
+
 
             Document doc = Jsoup.parse(veryLongString);
             Element body = doc.body();
             Elements divs = body.getElementsByClass("div-textoLista");
 
+            if (divs.size() == 0) {
+                return books;
+            }
             for (Element e : divs) {
                 Book b = new Book();
                 //Pega o conteudo do primeiro h3
                 b.setTitle(e.select("h3").first().text());
-
+                Log.e("amem", "passei aqui");
                 //Pega o conteudo do primeiro p, passa por uma regex para pegar somente numeros e converte para int
                 b.setId(Integer.parseInt(e.select("p").first().text().replaceAll("\\D+", "")));
 
@@ -82,17 +81,10 @@ public class CheckLentBooksTask extends AsyncTask<HttpContext, Void, ArrayList<B
                 String regex = "(\\d{2}/\\d{2}/\\d{2})";
                 Matcher m = Pattern.compile(regex).matcher(e.selectFirst("p[id]").text());
                 if (m.find()) {
-                    try {
-                        Date date = new SimpleDateFormat("dd/MM/yy").parse(m.group(1));
-
+                    Date date = DateUtil.convertToDate(m.group(1));
                         b.setDevolution(date);
-                    }catch (ParseException er){
-                        er.printStackTrace();
-                    }
-
-                    // Use date here
                 } else {
-                    // Bad input
+                    throw new NullPointerException("Not found a date");
                 }
 
                 books.add(b);
