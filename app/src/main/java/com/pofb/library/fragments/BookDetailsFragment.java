@@ -1,23 +1,26 @@
-package com.pofb.library;
+package com.pofb.library.fragments;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.pofb.library.R;
 import com.pofb.library.model.Book;
+import com.pofb.library.model.HttpContextBundle;
+import com.pofb.library.model.RenewAnswer;
 import com.pofb.library.model.User;
 import com.pofb.library.tasks.LoginTask;
-import com.pofb.library.tasks.RenovationBooksTask;
+import com.pofb.library.tasks.RenewBooksTask;
 
 import java.util.concurrent.ExecutionException;
 
@@ -79,19 +82,22 @@ public class BookDetailsFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HttpContext localContext = null;
 
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-                User user = new User(sharedPreferences.getString("username", ""), sharedPreferences.getString("password", ""));
-                LoginTask login = new LoginTask();
+                RenewBooksTask renewBooksTask = new RenewBooksTask(book);
+                renewBooksTask.execute(HttpContextBundle.getContext());
+
+
                 try {
-                    localContext = login.execute(user).get();
-                } catch (ExecutionException | InterruptedException e) {
+                    RenewAnswer answer = renewBooksTask.get();
+                    Toast.makeText(getContext(), answer.getRenewOutput(), Toast.LENGTH_SHORT).show();
+
+
+                } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
-                RenovationBooksTask renovationBooksTask = new RenovationBooksTask(book);
-                renovationBooksTask.execute(localContext);
+
+
             }
         });
     }
